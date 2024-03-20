@@ -120,7 +120,6 @@ public class DevicePropsSpoofing {
             "oriole",
             "raven",
             "barbet",
-            "redfin",
             "bramble",
             "sunfish"
     };
