@@ -1,0 +1,16 @@
+android_library {
+    name: "HalcyonUILib",
+    srcs: ["src/main/java/**/*.kt"],
+    resource_dirs: ["src/main/res"],
+    static_libs: [
+        "androidx.compose.ui_ui",
+        "androidx.compose.material3_material3",
+        "androidx.compose.runtime_runtime",
+        "androidx.compose.foundation_foundation",
+        "androidx.compose.animation_animation",
+        "androidx.compose.material_material-icons-extended",
+    ],
+    sdk_version: "current",
+    min_sdk_version: "34",
+    kotlincflags: ["-Xjvm-default=all"],
+}
