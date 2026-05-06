@@ -23,8 +23,8 @@ fun HalcyonFloatingBottomBar(
         Surface(
             modifier = Modifier
                 .fillMaxWidth(0.92f)
-                .height(80.dp),
-            shape = RoundedCornerShape(40.dp),
+                .height(72.dp),
+            shape = RoundedCornerShape(36.dp),
             color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.95f),
             tonalElevation = 12.dp,
             shadowElevation = 8.dp
@@ -62,9 +62,9 @@ fun RowScope.HalcyonFloatingBottomBarItem(
     Surface(
         modifier = modifier
             .padding(horizontal = 4.dp)
-            .height(72.dp)
+            .height(64.dp)
             .weight(1f),
-        shape = RoundedCornerShape(36.dp),
+        shape = RoundedCornerShape(32.dp),
         color = containerColor,
         onClick = onClick
     ) {
