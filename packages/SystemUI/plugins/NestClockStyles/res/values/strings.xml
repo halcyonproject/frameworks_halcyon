@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    SPDX-FileCopyrightText: 2023 The Android Open Source Project
+    SPDX-FileCopyrightText: 2026 The Halcyon Project
+    SPDX-License-Identifier: Apache-2.0
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">NestClockStyles</string>
+
+    <!-- Nest Clock -->
+    <string name="clock_nest_clock_name">Nest Clock</string>
+    <string name="clock_nest_clock_description">Single-line elegant Nest clock style</string>
+
+    <!-- Skeleton string format for displaying the time in 12-hour format. -->
+    <string name="clock_12hr_format">hm</string>
+
+    <!-- Skeleton string format for displaying the time in 24-hour format. -->
+    <string name="clock_24hr_format">Hm</string>
+</resources>
