@@ -7,8 +7,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
+import org.hlcyn.ui.R
 
 @Composable
 fun HalcyonPreference(
@@ -24,11 +25,11 @@ fun HalcyonPreference(
         modifier = modifier
             .fillMaxWidth()
             .clickable(enabled = onClick != null) { onClick?.invoke() }
-            .padding(16.dp),
+            .padding(dimensionResource(R.dimen.nest_preference_padding)),
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (icon != null) {
-            Box(modifier = Modifier.padding(end = 16.dp)) {
+            Box(modifier = Modifier.padding(end = dimensionResource(R.dimen.nest_preference_icon_margin_end))) {
                 icon()
             }
         }
@@ -40,7 +41,7 @@ fun HalcyonPreference(
                 color = MaterialTheme.colorScheme.onSurface
             )
             if (summary != null) {
-                Spacer(modifier = Modifier.height(2.dp))
+                Spacer(modifier = Modifier.height(dimensionResource(R.dimen.nest_preference_summary_spacer)))
                 Text(
                     text = summary,
                     style = MaterialTheme.typography.bodyMedium,

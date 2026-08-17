@@ -1,13 +1,15 @@
 package org.hlcyn.ui.components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.dimensionResource
+import org.hlcyn.ui.R
 
 @Composable
 fun HalcyonFloatingBottomBar(
@@ -17,24 +19,29 @@ fun HalcyonFloatingBottomBar(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(bottom = 32.dp),
+            .padding(bottom = dimensionResource(R.dimen.nest_bottom_bar_margin_bottom)),
         contentAlignment = Alignment.Center
     ) {
         Surface(
             modifier = Modifier
-                .fillMaxWidth(0.92f)
-                .height(72.dp),
-            shape = RoundedCornerShape(36.dp),
+                .fillMaxWidth(0.65f)
+                .height(dimensionResource(R.dimen.nest_bottom_bar_height)),
+            shape = CircleShape,
             color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.95f),
-            tonalElevation = 12.dp,
-            shadowElevation = 8.dp
+            tonalElevation = dimensionResource(R.dimen.nest_bottom_bar_tonal_elevation),
+            shadowElevation = dimensionResource(R.dimen.nest_bottom_bar_shadow_elevation)
         ) {
             Row(
                 modifier = Modifier
-                    .padding(horizontal = 12.dp)
+                    .padding(
+                        horizontal = dimensionResource(R.dimen.nest_bottom_bar_padding_horizontal),
+                        vertical = dimensionResource(R.dimen.nest_bottom_bar_padding_vertical)
+                    )
                     .fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly,
+                horizontalArrangement = Arrangement.spacedBy(
+                    dimensionResource(R.dimen.nest_bottom_bar_item_spacing)
+                ),
                 content = content
             )
         }
@@ -51,7 +58,7 @@ fun RowScope.HalcyonFloatingBottomBarItem(
     val containerColor = if (selected) {
         MaterialTheme.colorScheme.primaryContainer
     } else {
-        androidx.compose.ui.graphics.Color.Transparent
+        Color.Transparent
     }
     val contentColor = if (selected) {
         MaterialTheme.colorScheme.onPrimaryContainer
@@ -61,10 +68,9 @@ fun RowScope.HalcyonFloatingBottomBarItem(
 
     Surface(
         modifier = modifier
-            .padding(horizontal = 4.dp)
-            .height(64.dp)
-            .weight(1f),
-        shape = RoundedCornerShape(32.dp),
+            .weight(1f)
+            .fillMaxHeight(),
+        shape = CircleShape,
         color = containerColor,
         onClick = onClick
     ) {
@@ -73,7 +79,7 @@ fun RowScope.HalcyonFloatingBottomBarItem(
                 imageVector = icon,
                 contentDescription = null,
                 tint = contentColor,
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(dimensionResource(R.dimen.nest_bottom_bar_icon_size))
             )
         }
     }

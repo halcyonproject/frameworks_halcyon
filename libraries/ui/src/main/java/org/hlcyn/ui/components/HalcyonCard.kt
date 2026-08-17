@@ -11,7 +11,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.dimensionResource
+import org.hlcyn.ui.R
 
 @Composable
 fun HalcyonCard(
@@ -22,14 +23,17 @@ fun HalcyonCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        shape = RoundedCornerShape(24.dp),
+            .padding(
+                horizontal = dimensionResource(R.dimen.nest_card_padding_horizontal),
+                vertical = dimensionResource(R.dimen.nest_card_padding_vertical)
+            ),
+        shape = RoundedCornerShape(dimensionResource(R.dimen.nest_card_corner_radius)),
         colors = CardDefaults.cardColors(
             containerColor = backgroundColor
         )
     ) {
         Column(
-            modifier = Modifier.padding(20.dp),
+            modifier = Modifier.padding(dimensionResource(R.dimen.nest_card_content_padding)),
             content = content
         )
     }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Floating Bottom Navigation Bar -->
+    <dimen name="nest_bottom_bar_margin_bottom">16dp</dimen>
+    <dimen name="nest_bottom_bar_height">50dp</dimen>
+    <dimen name="nest_bottom_bar_padding_vertical">5dp</dimen>
+    <dimen name="nest_bottom_bar_padding_horizontal">5dp</dimen>
+    <dimen name="nest_bottom_bar_item_spacing">5dp</dimen>
+    <dimen name="nest_bottom_bar_tonal_elevation">8dp</dimen>
+    <dimen name="nest_bottom_bar_shadow_elevation">8dp</dimen>
+
+    <!-- Floating Bottom Bar Item -->
+    <dimen name="nest_bottom_bar_icon_size">22dp</dimen>
+
+    <!-- Card -->
+    <dimen name="nest_card_padding_horizontal">16dp</dimen>
+    <dimen name="nest_card_padding_vertical">8dp</dimen>
+    <dimen name="nest_card_corner_radius">24dp</dimen>
+    <dimen name="nest_card_content_padding">20dp</dimen>
+
+    <!-- Preference -->
+    <dimen name="nest_preference_padding">16dp</dimen>
+    <dimen name="nest_preference_icon_margin_end">16dp</dimen>
+    <dimen name="nest_preference_summary_spacer">2dp</dimen>
+</resources>
