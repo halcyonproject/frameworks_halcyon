@@ -6,10 +6,12 @@
     <dimen name="nest_bottom_bar_padding_vertical">5dp</dimen>
     <dimen name="nest_bottom_bar_padding_horizontal">5dp</dimen>
     <dimen name="nest_bottom_bar_item_spacing">5dp</dimen>
-    <dimen name="nest_bottom_bar_tonal_elevation">8dp</dimen>
-    <dimen name="nest_bottom_bar_shadow_elevation">8dp</dimen>
+    <dimen name="nest_bottom_bar_tonal_elevation">6dp</dimen>
+    <dimen name="nest_bottom_bar_shadow_elevation">4dp</dimen>
 
     <!-- Floating Bottom Bar Item -->
+    <dimen name="nest_bottom_bar_indicator_tonal_elevation">2dp</dimen>
+    <dimen name="nest_bottom_bar_indicator_shadow_elevation">2dp</dimen>
     <dimen name="nest_bottom_bar_icon_size">22dp</dimen>
 
     <!-- Card -->

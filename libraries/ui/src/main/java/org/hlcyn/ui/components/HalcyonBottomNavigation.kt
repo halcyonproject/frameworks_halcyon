@@ -87,16 +87,16 @@ fun HalcyonFloatingBottomBar(
                             label = "indicatorWidth"
                         )
 
-                        Box(
+                        Surface(
                             modifier = Modifier
                                 .offset { IntOffset(animatedX.roundToInt(), 0) }
                                 .width(with(LocalDensity.current) { animatedWidth.toDp() })
-                                .fillMaxHeight()
-                                .background(
-                                    color = MaterialTheme.colorScheme.primaryContainer,
-                                    shape = CircleShape
-                                )
-                        )
+                                .fillMaxHeight(),
+                            shape = CircleShape,
+                            color = MaterialTheme.colorScheme.primaryContainer,
+                            tonalElevation = dimensionResource(R.dimen.nest_bottom_bar_indicator_tonal_elevation),
+                            shadowElevation = dimensionResource(R.dimen.nest_bottom_bar_indicator_shadow_elevation)
+                        ) {}
                     }
 
                     // Row containing the item icons and click listeners
