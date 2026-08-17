@@ -1,49 +1,115 @@
 package org.hlcyn.ui.components
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInParent
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.unit.IntOffset
 import org.hlcyn.ui.R
+import kotlin.math.roundToInt
+
+private class HalcyonBottomBarState {
+    var indicatorTargetX by mutableFloatStateOf(0f)
+    var indicatorTargetWidth by mutableFloatStateOf(0f)
+    var isInitialized by mutableStateOf(false)
+
+    fun updateSelectedBounds(x: Float, width: Float) {
+        indicatorTargetX = x
+        indicatorTargetWidth = width
+        isInitialized = true
+    }
+}
+
+private val LocalHalcyonBottomBarState = compositionLocalOf<HalcyonBottomBarState?> { null }
 
 @Composable
 fun HalcyonFloatingBottomBar(
     modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(bottom = dimensionResource(R.dimen.nest_bottom_bar_margin_bottom)),
-        contentAlignment = Alignment.Center
-    ) {
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth(0.65f)
-                .height(dimensionResource(R.dimen.nest_bottom_bar_height)),
-            shape = CircleShape,
-            color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.95f),
-            tonalElevation = dimensionResource(R.dimen.nest_bottom_bar_tonal_elevation),
-            shadowElevation = dimensionResource(R.dimen.nest_bottom_bar_shadow_elevation)
+    val barState = remember { HalcyonBottomBarState() }
+
+    CompositionLocalProvider(LocalHalcyonBottomBarState provides barState) {
+        Box(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(bottom = dimensionResource(R.dimen.nest_bottom_bar_margin_bottom)),
+            contentAlignment = Alignment.Center
         ) {
-            Row(
+            Surface(
                 modifier = Modifier
-                    .padding(
-                        horizontal = dimensionResource(R.dimen.nest_bottom_bar_padding_horizontal),
-                        vertical = dimensionResource(R.dimen.nest_bottom_bar_padding_vertical)
+                    .fillMaxWidth(0.65f)
+                    .height(dimensionResource(R.dimen.nest_bottom_bar_height)),
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.95f),
+                tonalElevation = dimensionResource(R.dimen.nest_bottom_bar_tonal_elevation),
+                shadowElevation = dimensionResource(R.dimen.nest_bottom_bar_shadow_elevation)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .padding(
+                            horizontal = dimensionResource(R.dimen.nest_bottom_bar_padding_horizontal),
+                            vertical = dimensionResource(R.dimen.nest_bottom_bar_padding_vertical)
+                        )
+                        .fillMaxSize()
+                ) {
+                    // Sliding active indicator chip background
+                    if (barState.isInitialized && barState.indicatorTargetWidth > 0f) {
+                        val animatedX by animateFloatAsState(
+                            targetValue = barState.indicatorTargetX,
+                            animationSpec = spring(
+                                dampingRatio = 0.8f,
+                                stiffness = Spring.StiffnessMediumLow
+                            ),
+                            label = "indicatorX"
+                        )
+                        val animatedWidth by animateFloatAsState(
+                            targetValue = barState.indicatorTargetWidth,
+                            animationSpec = spring(
+                                dampingRatio = 0.8f,
+                                stiffness = Spring.StiffnessMediumLow
+                            ),
+                            label = "indicatorWidth"
+                        )
+
+                        Box(
+                            modifier = Modifier
+                                .offset { IntOffset(animatedX.roundToInt(), 0) }
+                                .width(with(LocalDensity.current) { animatedWidth.toDp() })
+                                .fillMaxHeight()
+                                .background(
+                                    color = MaterialTheme.colorScheme.primaryContainer,
+                                    shape = CircleShape
+                                )
+                        )
+                    }
+
+                    // Row containing the item icons and click listeners
+                    Row(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(
+                            dimensionResource(R.dimen.nest_bottom_bar_item_spacing)
+                        ),
+                        content = content
                     )
-                    .fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(
-                    dimensionResource(R.dimen.nest_bottom_bar_item_spacing)
-                ),
-                content = content
-            )
+                }
+            }
         }
     }
 }
@@ -55,32 +121,42 @@ fun RowScope.HalcyonFloatingBottomBarItem(
     icon: ImageVector,
     modifier: Modifier = Modifier
 ) {
-    val containerColor = if (selected) {
-        MaterialTheme.colorScheme.primaryContainer
-    } else {
-        Color.Transparent
-    }
-    val contentColor = if (selected) {
-        MaterialTheme.colorScheme.onPrimaryContainer
-    } else {
-        MaterialTheme.colorScheme.onSurfaceVariant
-    }
+    val barState = LocalHalcyonBottomBarState.current
 
-    Surface(
+    // Smoothly fade icon color between active and inactive states
+    val contentColor by animateColorAsState(
+        targetValue = if (selected) {
+            MaterialTheme.colorScheme.onPrimaryContainer
+        } else {
+            MaterialTheme.colorScheme.onSurfaceVariant
+        },
+        animationSpec = tween(durationMillis = 250),
+        label = "iconColor"
+    )
+
+    Box(
         modifier = modifier
             .weight(1f)
-            .fillMaxHeight(),
-        shape = CircleShape,
-        color = containerColor,
-        onClick = onClick
+            .fillMaxHeight()
+            .onGloballyPositioned { coordinates ->
+                if (selected) {
+                    val x = coordinates.positionInParent().x
+                    val width = coordinates.size.width.toFloat()
+                    barState?.updateSelectedBounds(x, width)
+                }
+            }
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onClick
+            ),
+        contentAlignment = Alignment.Center
     ) {
-        Box(contentAlignment = Alignment.Center) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = contentColor,
-                modifier = Modifier.size(dimensionResource(R.dimen.nest_bottom_bar_icon_size))
-            )
-        }
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = contentColor,
+            modifier = Modifier.size(dimensionResource(R.dimen.nest_bottom_bar_icon_size))
+        )
     }
 }
