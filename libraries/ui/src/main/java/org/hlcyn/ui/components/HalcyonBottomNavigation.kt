@@ -20,6 +20,7 @@ import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
 import org.hlcyn.ui.R
 import kotlin.math.roundToInt
 
@@ -56,7 +57,7 @@ fun HalcyonFloatingBottomBar(
                     .fillMaxWidth(0.65f)
                     .height(dimensionResource(R.dimen.nest_bottom_bar_height)),
                 shape = CircleShape,
-                color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.95f),
+                color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 tonalElevation = dimensionResource(R.dimen.nest_bottom_bar_tonal_elevation),
                 shadowElevation = dimensionResource(R.dimen.nest_bottom_bar_shadow_elevation)
             ) {
