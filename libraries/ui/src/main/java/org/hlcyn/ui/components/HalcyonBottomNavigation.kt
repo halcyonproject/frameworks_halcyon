@@ -1,11 +1,11 @@
 package org.hlcyn.ui.components
 
+import android.view.ViewGroup
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -14,13 +14,17 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import eightbitlab.com.blurview.BlurView
 import org.hlcyn.ui.R
 import kotlin.math.roundToInt
 
@@ -38,12 +42,19 @@ private class HalcyonBottomBarState {
 
 private val LocalHalcyonBottomBarState = compositionLocalOf<HalcyonBottomBarState?> { null }
 
+private const val BLUR_RADIUS = 20f
+
 @Composable
 fun HalcyonFloatingBottomBar(
     modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit
 ) {
     val barState = remember { HalcyonBottomBarState() }
+    val composeView = LocalView.current
+    // surfaceContainerHigh at ~50% alpha for a readable frosted-glass overlay
+    val overlayColor = MaterialTheme.colorScheme.surfaceContainerHigh
+        .copy(alpha = 0.5f)
+        .toArgb()
 
     CompositionLocalProvider(LocalHalcyonBottomBarState provides barState) {
         Box(
@@ -52,15 +63,39 @@ fun HalcyonFloatingBottomBar(
                 .padding(bottom = dimensionResource(R.dimen.nest_bottom_bar_margin_bottom)),
             contentAlignment = Alignment.Center
         ) {
-            Surface(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth(0.65f)
-                    .height(dimensionResource(R.dimen.nest_bottom_bar_height)),
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                tonalElevation = dimensionResource(R.dimen.nest_bottom_bar_tonal_elevation),
-                shadowElevation = dimensionResource(R.dimen.nest_bottom_bar_shadow_elevation)
+                    .height(dimensionResource(R.dimen.nest_bottom_bar_height))
+                    .clip(CircleShape)
             ) {
+                // Blurred background layer
+                AndroidView(
+                    factory = { context ->
+                        BlurView(context).apply {
+                            layoutParams = ViewGroup.LayoutParams(
+                                ViewGroup.LayoutParams.MATCH_PARENT,
+                                ViewGroup.LayoutParams.MATCH_PARENT
+                            )
+                        }
+                    },
+                    update = { blurView ->
+                        val rootView = composeView.rootView as ViewGroup
+                        // Defer setupWith() via post so it runs after Compose's current
+                        // layout pass. Calling it synchronously here causes BlurView's
+                        // PreDrawBlurController.init() to invoke DecorView.draw() while
+                        // Compose's measureAndLayout is still on the stack, crashing with
+                        // "performMeasureAndLayout called during measure layout".
+                        blurView.post {
+                            blurView.setupWith(rootView)
+                                .setBlurRadius(BLUR_RADIUS)
+                                .setOverlayColor(overlayColor)
+                        }
+                    },
+                    modifier = Modifier.matchParentSize()
+                )
+
+                // Sliding active indicator chip + icon row, drawn above blur
                 Box(
                     modifier = Modifier
                         .padding(
@@ -69,7 +104,6 @@ fun HalcyonFloatingBottomBar(
                         )
                         .fillMaxSize()
                 ) {
-                    // Sliding active indicator chip background
                     if (barState.isInitialized && barState.indicatorTargetWidth > 0f) {
                         val animatedX by animateFloatAsState(
                             targetValue = barState.indicatorTargetX,
@@ -161,3 +195,4 @@ fun RowScope.HalcyonFloatingBottomBarItem(
         )
     }
 }
+

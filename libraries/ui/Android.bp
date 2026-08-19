@@ -9,8 +9,8 @@ android_library {
         "androidx.compose.foundation_foundation",
         "androidx.compose.animation_animation",
         "androidx.compose.material_material-icons-extended",
+        "BlurView",
     ],
     sdk_version: "current",
-    min_sdk_version: "34",
     kotlincflags: ["-Xjvm-default=all"],
 }
